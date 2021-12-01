@@ -5,6 +5,8 @@ import (
 	"os"
 )
 
+// ParseFile attempts to open filepath and returns a slice
+// containing each line of the file as a string
 func ParseFile(filePath string) ([]string, error) {
 	file, err := os.Open(filePath)
 
