@@ -1,4 +1,4 @@
-package parseinput
+package main
 
 import (
 	"bufio"
