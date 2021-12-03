@@ -16,6 +16,8 @@ func ParseFile(filePath string) ([]string, error) {
 		return nil, err
 	}
 
+	defer file.Close()
+
 	scanner := bufio.NewScanner(file)
 
 	text := make([]string, 0, 500)
