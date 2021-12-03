@@ -3,6 +3,7 @@ package parseinput
 import (
 	"bufio"
 	"fmt"
+	"log"
 	"os"
 	"strconv"
 )
@@ -44,4 +45,8 @@ func ParseFileAsInt(filePath string) ([]int, error) {
 	}
 
 	return numbers, nil
+}
+
+func Fail(err error) {
+	log.Fatalf("unable to complete action %v", err)
 }
