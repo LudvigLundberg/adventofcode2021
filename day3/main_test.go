@@ -1,6 +1,9 @@
 package main
 
-import "testing"
+import (
+	"reflect"
+	"testing"
+)
 
 func TestCountBits(t *testing.T) {
 	verify := []byte{'1', '0', '1', '0', '1'}
@@ -21,5 +24,16 @@ func TestCountBits(t *testing.T) {
 
 	if expect != got {
 		t.Errorf("expected: %s, got: %s", string(expect), string(got))
+	}
+}
+
+func TestFilterByFirstBit(t *testing.T) {
+	verify := []string{"1001", "0101", "1010"}
+	expect := []string{"1001", "1010"}
+
+	got := filterByBit(verify, '1', 0)
+
+	if !reflect.DeepEqual(expect, got) {
+		t.Errorf("expected: %v, got: %v", expect, got)
 	}
 }
