@@ -21,13 +21,37 @@ func main() {
 }
 
 func partOne(input []string) {
+	bitArray, err := createBitArray(input)
+
+	if err != nil {
+		panic(err)
+	}
+
+	reverseBitArray := make([]byte, len(bitArray))
+	for i, bit := range bitArray {
+		reverseBitArray[i] = reverseBit(bit)
+	}
+	gamma, err := strconv.ParseInt(string(bitArray), 2, 64)
+	if err != nil {
+		panic(err)
+	}
+
+	epsilon, err := strconv.ParseInt(string(reverseBitArray), 2, 64)
+
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Printf("gamma: %d, epsilon: %d, multiplied: %d \n", gamma, epsilon, gamma*epsilon)
+}
+
+func createBitArray(input []string) ([]byte, error) {
 	var nrOfBits int
 	if len(input) > 0 {
 		nrOfBits = len(input[0])
 	}
 
 	bitArray := make([]byte, nrOfBits)
-	reverseBitArray := make([]byte, nrOfBits)
 
 	var wg sync.WaitGroup
 	wg.Add(nrOfBits)
@@ -43,24 +67,13 @@ func partOne(input []string) {
 			}
 			close(byteChan)
 			bitArray[i] = <-returnChan
-			reverseBitArray[i] = reverseBit(bitArray[i])
 			wg.Done()
 		}(i)
 	}
 
 	wg.Wait()
-	gamma, err := strconv.ParseInt(string(bitArray), 2, 64)
-	if err != nil {
-		log.Fatalf("unable to complete action %v", err)
-	}
 
-	epsilon, err := strconv.ParseInt(string(reverseBitArray), 2, 64)
-
-	if err != nil {
-		log.Fatalf("unable to complete action %v", err)
-	}
-
-	fmt.Printf("gamma: %d, epsilon: %d, multiplied: %d \n", gamma, epsilon, gamma*epsilon)
+	return bitArray, nil
 }
 
 func reverseBit(x byte) byte {
