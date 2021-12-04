@@ -48,6 +48,45 @@ func partOne() {
 	}
 }
 
+func partTwo() {
+	input, err := parseinput.ParseFile("input")
+	if err != nil {
+		panic(err)
+	}
+	drawnNumbers, err := generateNumbers(input[0])
+
+	if err != nil {
+		panic(err)
+	}
+
+	bingos := make([]Bingo, 0, 20)
+	winners := make(map[Bingo]struct{})
+	lastScore := 0
+
+	for i := 1; i < len(input); i += 6 {
+		board, err := generateBoard(input[i+1 : i+6])
+		if err != nil {
+			panic(err)
+		}
+		bingos = append(bingos, CreateBingo(board))
+	}
+
+	for _, nr := range drawnNumbers {
+		for _, bingo := range bingos {
+			win, _ := bingo.Fill(nr)
+			if win {
+				_, exists := winners[bingo]
+				if !exists {
+					lastScore = bingo.Score(nr)
+					winners[bingo] = struct{}{}
+				}
+			}
+		}
+	}
+
+	fmt.Printf("total score of last winner: %v\n", lastScore)
+}
+
 func generateBoard(input []string) ([5][5]int, error) {
 	numbers := [5][5]int{}
 	for i, line := range input {
@@ -77,10 +116,6 @@ func generateNumbers(line string) ([]int, error) {
 		numbers[i] = nr
 	}
 	return numbers, nil
-}
-
-func partTwo() {
-
 }
 
 func CreateBingo(board [5][5]int) Bingo {
